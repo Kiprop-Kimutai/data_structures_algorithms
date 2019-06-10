@@ -1,23 +1,24 @@
 #include <stdio.h>
-#include "string.h"
 #include "stdlib.h"
+#include "string.h"
 #define maxsize 5
-int front = -1, rear = -1, option;
-int  stack[maxsize];
-char *menu[10] = {"insert","delete","display","exit"};
-void insert(void);
-void pop(void);
+int queue[maxsize];
+int rear =-1, front = -1;
+char *menus[10] = {"push","pop","display","exit"};
+void push(void);
 void display(void);
+void pop(void);
 int main(void) {
-  while(option != 4) {
-    printf("Select an operation to perfom:\n");
-    for(int i = 0; i<4; i++) {
-      printf("%d. %s\n",i+1,menu[i]);
+  int option;
+  while(option !=4) {
+    printf("select queue operation to perform\n");
+    for(int i =0; i<4; i++) {
+      printf("%d. %s\n",i+1,menus[i]);
     }
     scanf("%d",&option);
     switch(option) {
       case 1:
-      insert();
+      push();
       break;
       case 2:
       pop();
@@ -29,64 +30,49 @@ int main(void) {
       printf("exiting...\n");
       break;
       default:
-      printf("select a valid menu\n");
+      printf("enter valid menu\n");
       break;
     }
   }
   return 0;
 }
-
-void insert(void){
+void push(void) {
   int item;
-  printf("Enter an element to insert\n");
-  scanf("%d",&item);
-  //queue is full
   if(rear == maxsize) {
-    printf("queue overflow error..\n");
+    printf("que overflow error\n");
     return;
   }
-  //queue is empty
-  if(rear == -1 && front == -1) {
+  printf("Enter value to queue:\n");
+  scanf("%d",&item);
+  //empty queue
+  if(rear == -1) {
     rear = 0;
     front = 0;
-    stack[front] = item;
-    printf("Element pushed to the beginning of an empty queue\n");
+    queue[rear] = item;
+    printf("Item inserted into an empty queue\n");
   }
   else {
-    rear++;
-    stack[rear] = item;
-    printf("Element pushed to an existing queue\n");
-  }
-}
-
-void display(void) {
-  printf("Init...\n");
-  int counter = front;
-  if(front == -1){
-    printf("queue is empty!\n");
-    return;
-  }
-  while(counter <= rear){
-    printf("element at position %d in the queue is %d\n", counter+1,stack[counter]);
-    counter++;
+    //not an empty queue
+    rear = rear+1;
+    queue[rear] = item;
+    printf("Item enqueued into an existing queue\n");
   }
 }
 
 void pop(void) {
-  int y;
-  //empty queue
   if(front == -1) {
-    printf("Can't pop from an empty queue\n");
+    printf("underflow...queue is empty\n");
     return;
   }
-  y = stack[front];
-  //if there is one element in the queue, the queue will be empty subsequently
-  if(front == rear) {
-    front = rear = -1;
-    printf("Queue has been emptied..\n");
-  }
-  else
+  int item = queue[front];
   front = front+1;
-  printf("Element %d deleted from queue\n",y);
-
+  printf("Item %d has been dequeued\n",item);
+}
+void display(void) {
+  printf("rear%d\n",rear);
+  int counter = front;
+  while(counter<=rear) {
+    printf("element at position %d is %d\n",counter, queue[counter]);
+    counter++;
+  }
 }
